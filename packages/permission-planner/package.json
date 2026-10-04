@@ -1,0 +1,59 @@
+{
+  "name": "@teamshift/permission-planner",
+  "version": "0.1.0",
+  "description": "Turn a list of intended AI-agent actions into the minimum OAuth scopes and API permissions (Google, Microsoft Graph, Slack, HubSpot, QuickBooks, Stripe, Shopify), a risk tier and a recommended human-approval policy.",
+  "keywords": [
+    "oauth",
+    "oauth-scopes",
+    "least-privilege",
+    "permissions",
+    "ai-agents",
+    "gmail-api",
+    "microsoft-graph",
+    "slack-scopes",
+    "hubspot",
+    "quickbooks",
+    "stripe-restricted-keys",
+    "shopify-access-scopes",
+    "human-in-the-loop"
+  ],
+  "license": "Apache-2.0",
+  "author": "TeamShift (https://teamshift.io)",
+  "homepage": "https://teamshift.io/tools/permission-planner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teamshift-io/agent-toolkit.git",
+    "directory": "packages/permission-planner"
+  },
+  "bugs": {
+    "url": "https://github.com/teamshift-io/agent-toolkit/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "permission-planner": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

@@ -1,0 +1,26 @@
+# agent-toolkit
+
+> agent-toolkit is TeamShift's free, open-source (Apache-2.0) collection of small TypeScript developer tools for people building AI agents and business automations. It lints workflows before they run, verifies and debugs webhook signatures, and plans least-privilege OAuth scopes with human-approval policies. Each tool has a browser-safe core (no Node.js built-ins), a CLI runnable with npx, and tests.
+
+All three tools run locally or in the browser and send no data anywhere. Free web versions with no login are at https://teamshift.io/tools.
+
+## Tools
+
+- [workflow-lint README](https://github.com/teamshift-io/agent-toolkit/blob/main/packages/workflow-lint/README.md): Preflight linter for n8n workflow exports and a generic YAML/JSON workflow spec. Nine rules: missing error handling, unsafe retries without idempotency keys, missing timeouts, money/delete/external-send steps without human approval, no completion check, hardcoded secrets, unbounded loops/pagination, webhook triggers without signature verification, and PII sent to LLM steps without a note. Pretty, JSON and SARIF output. `npx @teamshift/workflow-lint workflow.json`
+- [webhook-inspect README](https://github.com/teamshift-io/agent-toolkit/blob/main/packages/webhook-inspect/README.md): Verifies Stripe, GitHub, Shopify, Slack, Twilio and generic HMAC webhook signatures with WebCrypto, explains each event (type, id, key fields), and diagnoses failures (re-serialized body, wrong secret type or format, timestamp skew, proxy URL rewrites, wrong header). Includes a local capture server (`listen`) and replay with re-signing. `npx @teamshift/webhook-inspect verify --provider stripe ...`
+- [permission-planner README](https://github.com/teamshift-io/agent-toolkit/blob/main/packages/permission-planner/README.md): Maps intended agent actions (e.g. gmail.send, hubspot.write_deals, stripe.refund) to minimum OAuth scopes and API permissions for Google Workspace, Microsoft Graph, Slack, HubSpot, QuickBooks Online, Stripe restricted keys and Shopify, with risk tiers (read, write-internal, send-external, money, destructive), approval policies, and an official source URL plus verified/unverified status for every scope. `npx @teamshift/permission-planner plan actions.yaml`
+
+## Key facts
+
+- Sending Gmail from an agent needs only https://www.googleapis.com/auth/gmail.send (Google: sensitive); avoid https://mail.google.com/ (restricted, full access).
+- QuickBooks Online has no read-only accounting scope; com.intuit.quickbooks.accounting grants read and write.
+- Stripe signatures: HMAC-SHA256 over `${t}.${rawBody}` keyed with the full whsec_ secret; the most common failure is verifying a re-serialized JSON body instead of the raw body.
+- Recommended approval policy: money and destructive actions always need human approval; external sends need approval until the agent has a track record.
+
+## Project
+
+- [Repository](https://github.com/teamshift-io/agent-toolkit)
+- [Contributing](https://github.com/teamshift-io/agent-toolkit/blob/main/CONTRIBUTING.md): adding rules, providers and catalog entries (official source URL required)
+- [Security policy](https://github.com/teamshift-io/agent-toolkit/blob/main/SECURITY.md)
+- [Citation](https://github.com/teamshift-io/agent-toolkit/blob/main/CITATION.cff)
+- [TeamShift open source](https://teamshift.io/open-source/agent-toolkit): AI workers for small-business operations

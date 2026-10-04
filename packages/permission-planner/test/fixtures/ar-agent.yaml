@@ -1,0 +1,14 @@
+# Accounts-receivable agent for a home-services business (fictional).
+actions:
+  - action: gmail.read
+    why: Find customer replies about open invoices
+  - gmail.send
+  - google:gsheets.write
+  - qbo.read_accounting
+  - qbo.send_invoice
+  - stripe:refund
+  - slack.post_message
+  - hubspot.write_deals
+  - quickbooks:issue_credit_memo
+currentScopes:
+  - https://mail.google.com/

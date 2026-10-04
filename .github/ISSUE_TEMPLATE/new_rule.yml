@@ -1,0 +1,35 @@
+name: New workflow-lint rule
+description: Propose a check that catches a real automation or agent failure before it runs.
+labels: ["workflow-lint", "new-rule"]
+body:
+  - type: textarea
+    id: failure
+    attributes:
+      label: The failure this prevents
+      description: What went wrong in a real workflow? (double charge, silent no-op, data leak, ...)
+    validations:
+      required: true
+  - type: textarea
+    id: detection
+    attributes:
+      label: How to detect it
+      description: Which fields or node settings signal the problem, for n8n and/or the generic spec?
+    validations:
+      required: true
+  - type: textarea
+    id: bad
+    attributes:
+      label: Minimal example that should be flagged
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: good
+    attributes:
+      label: Near-miss that must NOT be flagged
+      render: yaml
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Suggested severity
+      options: ["error", "warning", "info"]

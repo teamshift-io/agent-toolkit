@@ -1,0 +1,18 @@
+{
+  "id": "evt_3PqTest0001",
+  "object": "event",
+  "api_version": "2024-06-20",
+  "created": 1760000000,
+  "livemode": false,
+  "type": "payment_intent.succeeded",
+  "data": {
+    "object": {
+      "id": "pi_3PqTest0001",
+      "object": "payment_intent",
+      "amount": 12500,
+      "currency": "usd",
+      "status": "succeeded",
+      "customer": "cus_QTest0001"
+    }
+  }
+}

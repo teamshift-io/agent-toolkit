@@ -1,0 +1,58 @@
+{
+  "name": "@teamshift/workflow-lint",
+  "version": "0.1.0",
+  "description": "Preflight linter for AI-agent and automation workflows (n8n exports and a generic YAML/JSON spec): catches missing error handling, unsafe retries, unapproved money/delete/send actions, missing timeouts, hardcoded secrets and unverified webhooks before they run.",
+  "keywords": [
+    "workflow-lint",
+    "n8n",
+    "linter",
+    "ai-agents",
+    "automation",
+    "workflow",
+    "preflight",
+    "idempotency",
+    "human-in-the-loop",
+    "secrets-detection",
+    "sarif",
+    "agent-safety"
+  ],
+  "license": "Apache-2.0",
+  "author": "TeamShift (https://teamshift.io)",
+  "homepage": "https://teamshift.io/tools/workflow-lint",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teamshift-io/agent-toolkit.git",
+    "directory": "packages/workflow-lint"
+  },
+  "bugs": {
+    "url": "https://github.com/teamshift-io/agent-toolkit/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "workflow-lint": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

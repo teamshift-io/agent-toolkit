@@ -1,0 +1,131 @@
+{
+  "name": "New order follow-up",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "new-order", "options": { "rawBody": true } },
+      "id": "b1",
+      "name": "Order Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst sig = $input.first().json.headers['x-shop-hmac-sha256'];\nconst digest = crypto.createHmac('sha256', $env.SHOP_WEBHOOK_SECRET).update($input.first().binary.data.data, 'base64').digest('base64');\nif (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(digest))) throw new Error('bad signature');\nreturn $input.all();"
+      },
+      "id": "b2",
+      "name": "Verify Signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 0]
+    },
+    {
+      "parameters": {
+        "url": "https://api.shop.example/v1/orders",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Authorization", "value": "=Bearer {{ $env.SHOP_TOKEN }}" }] },
+        "options": {
+          "timeout": 10000,
+          "pagination": { "pagination": { "paginationMode": "responseContainsNextURL", "nextURL": "={{ $response.body.next }}", "limitPagesFetched": true, "maxRequests": 20 } }
+        }
+      },
+      "id": "b3",
+      "name": "Fetch Orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": { "batchSize": 10, "options": {} },
+      "id": "b4",
+      "name": "Loop Over Orders",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a thank-you note for {{ $json.customer.first_name }} about order {{ $json.id }}."
+      },
+      "id": "b5",
+      "name": "Draft Thank-You",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [800, 0],
+      "notes": "PII: only the customer's first name is sent to the model; the model provider account has zero data retention."
+    },
+    {
+      "parameters": { "operation": "sendAndWait", "sendTo": "owner@shop.example", "subject": "Approve thank-you + deposit charge?", "message": "={{ $json.output }}" },
+      "id": "b6",
+      "name": "Owner Approval",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1000, 0]
+    },
+    {
+      "parameters": { "sendTo": "={{ $json.customer.email }}", "subject": "Thanks for your order", "message": "={{ $json.output }}" },
+      "id": "b7",
+      "name": "Email Customer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1200, 0],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.stripe.com/v1/payment_intents",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Idempotency-Key", "value": "={{ $json.id }}-deposit" }] },
+        "options": { "timeout": 10000 }
+      },
+      "id": "b8",
+      "name": "Charge Deposit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 0],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": { "url": "=https://api.stripe.com/v1/payment_intents/{{ $json.id }}", "options": { "timeout": 10000 } },
+      "id": "b9",
+      "name": "Verify Charge",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 0]
+    },
+    {
+      "parameters": { "channel": "#ops", "text": "=Order follow-up failed: {{ $json.error.message }}" },
+      "id": "b10",
+      "name": "Alert Ops",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1600, 200]
+    }
+  ],
+  "connections": {
+    "Order Webhook": { "main": [[{ "node": "Verify Signature", "type": "main", "index": 0 }]] },
+    "Verify Signature": { "main": [[{ "node": "Fetch Orders", "type": "main", "index": 0 }]] },
+    "Fetch Orders": { "main": [[{ "node": "Loop Over Orders", "type": "main", "index": 0 }]] },
+    "Loop Over Orders": { "main": [[], [{ "node": "Draft Thank-You", "type": "main", "index": 0 }]] },
+    "Draft Thank-You": { "main": [[{ "node": "Owner Approval", "type": "main", "index": 0 }]] },
+    "Owner Approval": { "main": [[{ "node": "Email Customer", "type": "main", "index": 0 }]] },
+    "Email Customer": {
+      "main": [
+        [{ "node": "Charge Deposit", "type": "main", "index": 0 }],
+        [{ "node": "Alert Ops", "type": "main", "index": 0 }]
+      ]
+    },
+    "Charge Deposit": {
+      "main": [
+        [{ "node": "Verify Charge", "type": "main", "index": 0 }],
+        [{ "node": "Alert Ops", "type": "main", "index": 0 }]
+      ]
+    },
+    "Verify Charge": { "main": [[{ "node": "Loop Over Orders", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "errorWorkflow": "wf-error-alerts" }
+}

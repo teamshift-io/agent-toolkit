@@ -1,0 +1,41 @@
+# A typical first draft of an "overdue invoice chaser" agent. Every rule fires on this file.
+name: Overdue invoice chaser
+trigger:
+  type: webhook
+  path: /hooks/invoice-overdue
+steps:
+  - id: list-invoices
+    action: http.get
+    system: accounting
+    params:
+      url: https://api.accounting.example/v1/invoices?status=overdue
+      headers:
+        Authorization: Bearer FAKE0123456789abcdefFAKE0123456789
+    paginate:
+      cursor: next_page
+
+  - id: draft-reminder
+    action: llm.generate
+    system: openai
+    timeoutSec: 60
+    inputs:
+      customerEmail: "{{ invoice.customer.email }}"
+      customerName: "{{ invoice.customer.full_name }}"
+      prompt: Write a friendly payment reminder.
+
+  - id: send-reminder
+    action: email.send
+    system: gmail
+    sideEffect: send
+    timeoutSec: 30
+    retry:
+      maxAttempts: 3
+
+  - id: charge-card
+    action: payment.charge
+    system: stripe
+    sideEffect: money
+    timeoutSec: 30
+    onError: continue
+    params:
+      apiKey: demo_live_0123456789abcdef

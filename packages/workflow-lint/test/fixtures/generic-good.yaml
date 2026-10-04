@@ -1,0 +1,64 @@
+# The same workflow after fixing every finding. workflow-lint reports 0 problems.
+name: Overdue invoice chaser
+trigger:
+  type: webhook
+  path: /hooks/invoice-overdue
+  verifySignature: true
+completionCheck:
+  description: Every reminded invoice has reminder_sent_at set in the accounting system.
+  step: verify-reminders
+steps:
+  - id: list-invoices
+    action: http.get
+    system: accounting
+    timeoutSec: 30
+    params:
+      url: https://api.accounting.example/v1/invoices?status=overdue
+      headers:
+        Authorization: "Bearer {{ $env.ACCOUNTING_TOKEN }}"
+    paginate:
+      cursor: next_page
+      maxPages: 20
+
+  - id: draft-reminder
+    action: llm.generate
+    system: openai
+    timeoutSec: 60
+    inputs:
+      customerEmail: "{{ invoice.customer.email }}"
+      customerName: "{{ invoice.customer.full_name }}"
+      prompt: Write a friendly payment reminder.
+    piiNote: Customer name and email are needed to personalize the reminder; provider account has zero data retention.
+
+  - id: owner-approval
+    action: approval.request
+    system: slack
+    approval:
+      required: true
+      by: office-manager
+    timeoutSec: 86400
+
+  - id: send-reminder
+    action: email.send
+    system: gmail
+    sideEffect: send
+    timeoutSec: 30
+    onError: alert
+    retry:
+      maxAttempts: 3
+    idempotencyKey: "{{ invoice.id }}-reminder-{{ reminder.number }}"
+
+  - id: charge-card
+    action: payment.charge
+    system: stripe
+    sideEffect: money
+    timeoutSec: 30
+    onError: stop
+    idempotencyKey: "{{ invoice.id }}-charge"
+    params:
+      apiKey: "{{ $env.STRIPE_RESTRICTED_KEY }}"
+
+  - id: verify-reminders
+    action: verify.reminders_sent
+    system: accounting
+    timeoutSec: 30

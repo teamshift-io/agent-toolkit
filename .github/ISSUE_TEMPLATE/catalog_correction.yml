@@ -1,0 +1,33 @@
+name: Permission catalog correction or addition
+description: Fix or add a scope mapping in permission-planner. An official documentation link is required.
+labels: ["permission-planner", "catalog"]
+body:
+  - type: input
+    id: action
+    attributes:
+      label: Action id
+      placeholder: "gmail.send (or a new id like hubspot.read_tickets)"
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What is wrong or missing
+      description: Current scope/tier/classification vs. what it should be.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Official documentation URL
+      description: Provider's own docs only (no blogs, forums or AI answers).
+      placeholder: "https://developers.google.com/workspace/gmail/api/auth/scopes"
+    validations:
+      required: true
+  - type: textarea
+    id: quote
+    attributes:
+      label: Quote from that page
+      description: Paste the exact line that lists the scope and what it allows.
+    validations:
+      required: true

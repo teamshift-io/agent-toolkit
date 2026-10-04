@@ -1,0 +1,86 @@
+{
+  "name": "New order follow-up",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "new-order", "options": {} },
+      "id": "a1",
+      "name": "Order Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "https://api.shop.example/v1/orders",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Authorization", "value": "Bearer FAKE0123456789abcdefFAKE0123456789" }] },
+        "options": { "pagination": { "pagination": { "paginationMode": "responseContainsNextURL", "nextURL": "={{ $response.body.next }}" } } }
+      },
+      "id": "a2",
+      "name": "Fetch Orders",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 0]
+    },
+    {
+      "parameters": { "url": "https://api.shop.example/v1/exports/latest", "options": { "timeout": 10000 } },
+      "id": "a3",
+      "name": "Poll Export",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": { "conditions": { "boolean": [{ "value1": "={{ $json.ready }}", "value2": true }] } },
+      "id": "a4",
+      "name": "Export Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a thank-you note for {{ $json.customer.first_name }} {{ $json.customer.last_name }} ({{ $json.customer.email }}, {{ $json.customer.phone }}) about order {{ $json.id }}."
+      },
+      "id": "a5",
+      "name": "Draft Thank-You",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [800, 0]
+    },
+    {
+      "parameters": { "sendTo": "={{ $json.customer.email }}", "subject": "Thanks for your order", "message": "={{ $json.output }}" },
+      "id": "a6",
+      "name": "Email Customer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1000, 0],
+      "retryOnFail": true,
+      "maxTries": 3
+    },
+    {
+      "parameters": { "method": "POST", "url": "https://api.stripe.com/v1/charges", "options": { "timeout": 10000 } },
+      "id": "a7",
+      "name": "Charge Deposit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 0],
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "Order Webhook": { "main": [[{ "node": "Fetch Orders", "type": "main", "index": 0 }]] },
+    "Fetch Orders": { "main": [[{ "node": "Poll Export", "type": "main", "index": 0 }]] },
+    "Poll Export": { "main": [[{ "node": "Export Ready?", "type": "main", "index": 0 }]] },
+    "Export Ready?": {
+      "main": [
+        [{ "node": "Draft Thank-You", "type": "main", "index": 0 }],
+        [{ "node": "Poll Export", "type": "main", "index": 0 }]
+      ]
+    },
+    "Draft Thank-You": { "main": [[{ "node": "Email Customer", "type": "main", "index": 0 }]] },
+    "Email Customer": { "main": [[{ "node": "Charge Deposit", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

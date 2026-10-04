@@ -1,0 +1,42 @@
+name: Bug report
+description: Something in workflow-lint, webhook-inspect or permission-planner behaves incorrectly.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - "@teamshift/workflow-lint"
+        - "@teamshift/webhook-inspect"
+        - "@teamshift/permission-planner"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version and runtime
+      placeholder: "0.1.0, Node 22 on macOS / Chrome 130 (browser tool)"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Command or code, plus a minimal input. Remove secrets and personal data. Use fake keys and .example domains.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+    validations:
+      required: true
+  - type: checkboxes
+    id: secrets
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed real secrets, tokens, webhook signing secrets and customer data from this issue.
+          required: true

@@ -1,0 +1,10 @@
+packages:
+  - "packages/*"
+
+# esbuild (used by tsup/vitest) ships a postinstall that validates its platform binary.
+allowBuilds:
+  esbuild: true
+
+# Root scripts call `pnpm -r`. If a different global pnpm shadows Corepack's shim on PATH,
+# warn instead of failing the version check.
+pmOnFail: warn

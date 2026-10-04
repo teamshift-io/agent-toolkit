@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/teamshift-io/agent-toolkit/security/advisories/new
+    about: Please report vulnerabilities privately, not as public issues.
+  - name: Try the tools in your browser
+    url: https://teamshift.io/tools
+    about: Free, no-login web versions of workflow-lint, webhook-inspect and permission-planner.

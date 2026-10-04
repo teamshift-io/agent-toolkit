@@ -1,0 +1,56 @@
+{
+  "name": "@teamshift/webhook-inspect",
+  "version": "0.1.0",
+  "description": "Verify, explain and debug webhook signatures (Stripe, GitHub, Shopify, Slack, Twilio, generic HMAC) with a browser-safe WebCrypto core, plus a local capture server and replay CLI.",
+  "keywords": [
+    "webhook",
+    "webhooks",
+    "signature-verification",
+    "hmac",
+    "stripe-webhook",
+    "github-webhook",
+    "shopify-webhook",
+    "slack-signing-secret",
+    "twilio-signature",
+    "webcrypto",
+    "replay",
+    "debugging",
+    "ai-agents"
+  ],
+  "license": "Apache-2.0",
+  "author": "TeamShift (https://teamshift.io)",
+  "homepage": "https://teamshift.io/tools/webhook-inspect",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teamshift-io/agent-toolkit.git",
+    "directory": "packages/webhook-inspect"
+  },
+  "bugs": {
+    "url": "https://github.com/teamshift-io/agent-toolkit/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "webhook-inspect": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  }
+}
