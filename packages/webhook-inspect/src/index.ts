@@ -1,5 +1,5 @@
 /**
- * @teamshift-io/webhook-inspect — browser-safe core (WebCrypto only, no Node.js built-ins).
+ * @teamshift/webhook-inspect — browser-safe core (WebCrypto only, no Node.js built-ins).
  */
 export {
   verify,

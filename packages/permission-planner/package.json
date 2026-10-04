@@ -1,5 +1,5 @@
 {
-  "name": "@teamshift-io/permission-planner",
+  "name": "@teamshift/permission-planner",
   "version": "0.1.0",
   "description": "Turn a list of intended AI-agent actions into the minimum OAuth scopes and API permissions (Google, Microsoft Graph, Slack, HubSpot, QuickBooks, Stripe, Shopify), a risk tier and a recommended human-approval policy.",
   "keywords": [

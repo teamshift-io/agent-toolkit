@@ -11,7 +11,7 @@ corepack pnpm@11.2.2 test
 corepack pnpm@11.2.2 typecheck
 ```
 
-All four must pass before you open a PR. Run a single package with `corepack pnpm@11.2.2 --filter @teamshift-io/workflow-lint test`.
+All four must pass before you open a PR. Run a single package with `corepack pnpm@11.2.2 --filter @teamshift/workflow-lint test`.
 
 ## Ground rules
 

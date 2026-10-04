@@ -1,4 +1,4 @@
-# @teamshift-io/webhook-inspect
+# @teamshift/webhook-inspect
 
 **webhook-inspect is an open-source tool that verifies Stripe, GitHub, Shopify, Slack, Twilio and generic HMAC webhook signatures, explains what each event is, and tells you exactly why a signature check fails.**
 
@@ -14,14 +14,14 @@ It has three parts:
 
 ```bash
 # Verify one request (prints the verdict, a diagnosis, and an explanation of the event)
-npx @teamshift-io/webhook-inspect verify --provider stripe --secret whsec_... \
+npx @teamshift/webhook-inspect verify --provider stripe --secret whsec_... \
   --header 't=1760000000,v1=5257a8...' --body-file body.json
 
 # Capture webhooks locally: prints headers, verification and explanation, saves to .webhook-inspect/
-npx @teamshift-io/webhook-inspect listen --port 8787 --secret whsec_...
+npx @teamshift/webhook-inspect listen --port 8787 --secret whsec_...
 
 # Re-send a captured event to your app, re-signed with a fresh timestamp
-npx @teamshift-io/webhook-inspect replay .webhook-inspect/2026-10-04T01-20-39-562Z-001-stripe.json \
+npx @teamshift/webhook-inspect replay .webhook-inspect/2026-10-04T01-20-39-562Z-001-stripe.json \
   --to http://localhost:3000/api/webhooks/stripe --resign --secret whsec_...
 ```
 
@@ -101,7 +101,7 @@ When verification fails, webhook-inspect tries concrete fixes. If a fix makes th
 ## Library use
 
 ```ts
-import { verify, diagnose, explain, detectProvider, sign } from "@teamshift-io/webhook-inspect";
+import { verify, diagnose, explain, detectProvider, sign } from "@teamshift/webhook-inspect";
 
 const rawBody = await request.text(); // raw bytes, never JSON.stringify(req.body)
 const result = await verify({ provider: "stripe", secret: env.STRIPE_WEBHOOK_SECRET, headers: request.headers, body: rawBody });
