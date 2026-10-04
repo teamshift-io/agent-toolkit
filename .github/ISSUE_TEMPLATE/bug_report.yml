@@ -7,9 +7,9 @@ body:
     attributes:
       label: Package
       options:
-        - "@teamshift/workflow-lint"
-        - "@teamshift/webhook-inspect"
-        - "@teamshift/permission-planner"
+        - "@teamshift-io/workflow-lint"
+        - "@teamshift-io/webhook-inspect"
+        - "@teamshift-io/permission-planner"
     validations:
       required: true
   - type: input

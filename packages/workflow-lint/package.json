@@ -1,5 +1,5 @@
 {
-  "name": "@teamshift/workflow-lint",
+  "name": "@teamshift-io/workflow-lint",
   "version": "0.1.0",
   "description": "Preflight linter for AI-agent and automation workflows (n8n exports and a generic YAML/JSON spec): catches missing error handling, unsafe retries, unapproved money/delete/send actions, missing timeouts, hardcoded secrets and unverified webhooks before they run.",
   "keywords": [

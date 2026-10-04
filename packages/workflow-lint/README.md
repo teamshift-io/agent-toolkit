@@ -1,4 +1,4 @@
-# @teamshift/workflow-lint
+# @teamshift-io/workflow-lint
 
 **workflow-lint is an open-source preflight linter that catches missing error handling, unsafe retries, unapproved money actions and hardcoded secrets in AI-agent and automation workflows before they run.**
 
@@ -9,9 +9,9 @@ It reads [n8n](https://n8n.io) workflow exports and a small, tool-agnostic YAML/
 ## Quickstart
 
 ```bash
-npx @teamshift/workflow-lint my-workflow.json          # n8n export
-npx @teamshift/workflow-lint agent.workflow.yaml       # generic spec
-npx @teamshift/workflow-lint flows/*.json --format sarif > workflow-lint.sarif
+npx @teamshift-io/workflow-lint my-workflow.json          # n8n export
+npx @teamshift-io/workflow-lint agent.workflow.yaml       # generic spec
+npx @teamshift-io/workflow-lint flows/*.json --format sarif > workflow-lint.sarif
 ```
 
 Exit code `0` = no errors, `1` = at least one error-severity finding, `2` = unreadable input or a usage error.
@@ -144,7 +144,7 @@ steps:
 ## Library use
 
 ```ts
-import { lint, formatPretty } from "@teamshift/workflow-lint";
+import { lint, formatPretty } from "@teamshift-io/workflow-lint";
 
 const result = lint(workflowText, { filename: "flow.json", ignore: ["WL005"] });
 if (result.summary.errors > 0) console.log(formatPretty([result]));
@@ -156,7 +156,7 @@ if (result.summary.errors > 0) console.log(formatPretty([result]));
 
 ### How do I lint an n8n workflow before activating it?
 
-Export it (*Workflow → Download*, or copy all nodes) and run `npx @teamshift/workflow-lint workflow.json`. Pasted node selections work too, because workflow-lint only needs `nodes` and `connections`.
+Export it (*Workflow → Download*, or copy all nodes) and run `npx @teamshift-io/workflow-lint workflow.json`. Pasted node selections work too, because workflow-lint only needs `nodes` and `connections`.
 
 ### How do I stop an AI agent from sending duplicate emails or double-charging when it retries?
 

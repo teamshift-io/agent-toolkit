@@ -14,16 +14,16 @@ Runtime dependencies are minimal: only `yaml`, used by the two tools that read Y
 
 | Tool | What it does | Try it |
 |---|---|---|
-| [`@teamshift/workflow-lint`](packages/workflow-lint) | Preflight linter for n8n exports and a generic YAML/JSON workflow spec. Catches missing error handling, unsafe retries, unapproved money/delete/send steps, missing timeouts, hardcoded secrets, unbounded loops, unverified webhooks, and PII sent to LLMs. Outputs to the terminal, JSON or SARIF. | [teamshift.io/tools/workflow-lint](https://teamshift.io/tools/workflow-lint) |
-| [`@teamshift/webhook-inspect`](packages/webhook-inspect) | Verifies Stripe, GitHub, Shopify, Slack, Twilio and generic HMAC signatures with WebCrypto, explains each event, and diagnoses *why* a signature fails. Includes a local capture server and a replay command. | [teamshift.io/tools/webhook-inspect](https://teamshift.io/tools/webhook-inspect) |
-| [`@teamshift/permission-planner`](packages/permission-planner) | Turns intended agent actions into minimum OAuth scopes and API permissions (Google, Microsoft Graph, Slack, HubSpot, QuickBooks, Stripe, Shopify), a risk tier and an approval policy. Every scope links to official docs. | [teamshift.io/tools/permission-planner](https://teamshift.io/tools/permission-planner) |
+| [`@teamshift-io/workflow-lint`](packages/workflow-lint) | Preflight linter for n8n exports and a generic YAML/JSON workflow spec. Catches missing error handling, unsafe retries, unapproved money/delete/send steps, missing timeouts, hardcoded secrets, unbounded loops, unverified webhooks, and PII sent to LLMs. Outputs to the terminal, JSON or SARIF. | [teamshift.io/tools/workflow-lint](https://teamshift.io/tools/workflow-lint) |
+| [`@teamshift-io/webhook-inspect`](packages/webhook-inspect) | Verifies Stripe, GitHub, Shopify, Slack, Twilio and generic HMAC signatures with WebCrypto, explains each event, and diagnoses *why* a signature fails. Includes a local capture server and a replay command. | [teamshift.io/tools/webhook-inspect](https://teamshift.io/tools/webhook-inspect) |
+| [`@teamshift-io/permission-planner`](packages/permission-planner) | Turns intended agent actions into minimum OAuth scopes and API permissions (Google, Microsoft Graph, Slack, HubSpot, QuickBooks, Stripe, Shopify), a risk tier and an approval policy. Every scope links to official docs. | [teamshift.io/tools/permission-planner](https://teamshift.io/tools/permission-planner) |
 
 ## Quickstart
 
 ```bash
-npx @teamshift/workflow-lint my-n8n-workflow.json
-npx @teamshift/webhook-inspect verify --provider stripe --secret whsec_... --header 't=...,v1=...' --body-file body.json
-npx @teamshift/permission-planner plan --actions gmail.send,hubspot.write_deals,stripe.refund
+npx @teamshift-io/workflow-lint my-n8n-workflow.json
+npx @teamshift-io/webhook-inspect verify --provider stripe --secret whsec_... --header 't=...,v1=...' --body-file body.json
+npx @teamshift-io/permission-planner plan --actions gmail.send,hubspot.write_deals,stripe.refund
 ```
 
 ## Why these three

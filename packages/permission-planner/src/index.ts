@@ -1,5 +1,5 @@
 /**
- * @teamshift/permission-planner — browser-safe core. No Node.js built-ins are imported here.
+ * @teamshift-io/permission-planner — browser-safe core. No Node.js built-ins are imported here.
  */
 export { CATALOG, PROVIDERS } from "./data/catalog.js";
 export type { CatalogEntry, ProviderId, ProviderInfo, RiskTier } from "./data/catalog.js";

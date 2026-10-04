@@ -1,5 +1,5 @@
 {
-  "name": "@teamshift/webhook-inspect",
+  "name": "@teamshift-io/webhook-inspect",
   "version": "0.1.0",
   "description": "Verify, explain and debug webhook signatures (Stripe, GitHub, Shopify, Slack, Twilio, generic HMAC) with a browser-safe WebCrypto core, plus a local capture server and replay CLI.",
   "keywords": [

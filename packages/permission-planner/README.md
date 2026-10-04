@@ -1,4 +1,4 @@
-# @teamshift/permission-planner
+# @teamshift-io/permission-planner
 
 **permission-planner is an open-source tool that turns a list of intended AI-agent actions into the minimum OAuth scopes and API permissions, a risk tier, and a recommended human-approval policy, with every scope traced to the provider's official documentation.**
 
@@ -9,10 +9,10 @@ It ships a curated catalog of 89 agent actions across Google Workspace (Gmail, C
 ## Quickstart
 
 ```bash
-npx @teamshift/permission-planner plan actions.yaml            # Markdown report
-npx @teamshift/permission-planner plan actions.yaml --format json
-npx @teamshift/permission-planner plan --actions gmail.send,slack.post_message,stripe.refund
-npx @teamshift/permission-planner list --provider google        # browse the catalog with sources
+npx @teamshift-io/permission-planner plan actions.yaml            # Markdown report
+npx @teamshift-io/permission-planner plan actions.yaml --format json
+npx @teamshift-io/permission-planner plan --actions gmail.send,slack.post_message,stripe.refund
+npx @teamshift-io/permission-planner list --provider google        # browse the catalog with sources
 ```
 
 `actions.yaml` is a list of action ids or `provider:action` strings, optionally with the scopes your app requests today:
@@ -112,7 +112,7 @@ Deduplication uses only documented coverage. For example, `gmail.compose` includ
 ## Library use
 
 ```ts
-import { plan, formatPlanMarkdown, CATALOG } from "@teamshift/permission-planner";
+import { plan, formatPlanMarkdown, CATALOG } from "@teamshift-io/permission-planner";
 
 const result = plan(["gmail.send", "hubspot.write_deals", "stripe.refund"], { currentScopes: ["https://mail.google.com/"] });
 result.providers;   // minimum scopes per provider, with neededBy

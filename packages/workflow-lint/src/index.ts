@@ -1,5 +1,5 @@
 /**
- * @teamshift/workflow-lint — browser-safe core. No Node.js built-ins are imported here.
+ * @teamshift-io/workflow-lint — browser-safe core. No Node.js built-ins are imported here.
  */
 export { lint, normalize, parseDocument, WorkflowParseError, RULE_LIST } from "./lint.js";
 export { RULES } from "./rules.js";
